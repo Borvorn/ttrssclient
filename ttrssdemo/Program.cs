@@ -23,19 +23,20 @@
             var username = ConfigurationManager.AppSettings["user"];
             var password = ConfigurationManager.AppSettings["password"];
             */
-
+            /*
             string server = "http://example.com/tt-rss/api/";
             string username = "user";
             string password = "password";
-
-            /*
+            */
+            
             Console.Write("Url : ");
             string server = Console.ReadLine();
             Console.Write("User : ");
             string username = Console.ReadLine();
             Console.Write("Password : ");
             string password = Console.ReadLine();
-            */
+
+            Console.WriteLine(serializer.Serialize(GetLoginRequest(username, password)));
 
             string response = webClient.UploadString(server, serializer.Serialize(GetLoginRequest(username, password)));
             Response<LoginResponse> loginResponse = serializer.Deserialize<Response<LoginResponse>>(response);
@@ -84,6 +85,7 @@
 
         static U ExecuteMethod<T, U>(T Request, string url)
         {
+            Console.WriteLine(serializer.Serialize(Request));
             string response = webClient.UploadString(url, serializer.Serialize(Request));
             return serializer.Deserialize<Response<U>>(response).content;
         }
