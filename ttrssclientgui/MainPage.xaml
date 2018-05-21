@@ -1,0 +1,147 @@
+﻿<Page
+    x:Class="ttrssclientgui.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ttrssclientgui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="mode1">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="700" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="topAppBar.Visibility" Value="Visible" />
+                        <Setter Target="bottomAppBar.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="narrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="topAppBar.Visibility" Value="Collapsed" />
+                        <Setter Target="bottomAppBar.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <SplitView x:Name="splitView" IsPaneOpen="False" CompactPaneLength="40" DisplayMode="CompactInline">
+            <SplitView.Pane>
+                <StackPanel x:Name="splitViewPane">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="All feeds" x:Name="PaneHeader" Grid.Row="0" Margin="60,12,0,0" FontSize="30"/>
+                        <ListView x:Name="FeedsListView" Grid.Row="1">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="=>" FontSize="20" Margin="-5,0,0,0" />
+                                            <TextBlock Text="Todo" FontSize="20" Margin="5,0,0,0" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </StackPanel>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Frame x:Name="ContentFrame" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Grid.Column="0" x:Name="selectAll" Margin="10,0" />
+                            <TextBox Grid.Column="1" x:Name="searchText" Width="Auto" Text="Todo" Margin="5,0" />
+                        </Grid>
+                        <ListView Grid.Row="1" x:Name="ArticlesListView" >
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Todo" />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <Grid Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="Gray">
+                            <ScrollViewer>
+                                <RichTextBlock x:Name="mainText">
+                                    <Paragraph>
+                                    </Paragraph>
+                                    <Paragraph>
+                                    </Paragraph>
+                                    <Paragraph>
+                                    </Paragraph>
+                                    <Paragraph>
+                                    </Paragraph>
+                                    <Paragraph />
+                                    <Paragraph>
+                                    </Paragraph>
+                                </RichTextBlock>
+                            </ScrollViewer>
+                        </Grid>
+                    </Grid>
+                </Frame>
+            </SplitView.Content>
+        </SplitView>
+
+        <ToggleButton Grid.Column="0" VerticalAlignment="Top" Foreground="{ThemeResource ApplicationForegroundThemeBrush}" >
+            <ToggleButton.Content>
+                <FontIcon x:Name="Hamburger" FontFamily="Segoe MDL2 Assets" Glyph="&#xE700;" Margin="0,10,0,0"/>
+            </ToggleButton.Content>
+        </ToggleButton>
+    </Grid>
+    <Page.TopAppBar>
+        <CommandBar x:Name="topAppBar">
+            <AppBarButton x:Name="AddRssFeedButton" Icon="Add" Label="Add Rss Feed" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <AppBarButton Icon="Remove" Label="Delete Rss Feed" HorizontalAlignment="Left" />
+            <AppBarButton x:Name="updateAll" Icon="Sync" Label="Update" />
+            <AppBarSeparator></AppBarSeparator>
+            <AppBarButton x:Name="markRead" Icon="Read" Label="Mark As Read" />
+            <AppBarButton x:Name="markUnread" Icon="Mail" Label="Mark As Unread" />
+            <AppBarButton x:Name="removeArticlesButton" Icon="Delete" Label="Delete" />
+            <AppBarSeparator></AppBarSeparator>
+            <AppBarButton x:Name="UndoDeleteArticle" Icon="Undo" Label="Undo" />
+            <AppBarButton x:Name="setting" Icon="Setting" Label="Setting" />
+        </CommandBar>
+    </Page.TopAppBar>
+    <Page.BottomAppBar>
+        <CommandBar x:Name="bottomAppBar" ClosedDisplayMode="Compact">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Read" Label="Mark As Read" />
+                <AppBarButton Icon="Delete" Label="Delete Articles" />
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Icon="Add" Label="Add Rss Feed" />
+                <AppBarButton Icon="Remove" Label="Delete Rss Feed" HorizontalAlignment="Left" />
+                <AppBarButton Icon="Sync" Label="Update" />
+
+                <AppBarButton Icon="Mail" Label="Mark As Unread" />
+
+                <AppBarButton Icon="Undo" Label="Undo Delete Articles" />
+                <AppBarButton Icon="Setting" Label="Setting" />
+            </CommandBar.SecondaryCommands>
+
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>
+
+
