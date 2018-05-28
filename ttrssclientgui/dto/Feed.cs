@@ -1,4 +1,6 @@
-﻿namespace ttrssclientgui.dto
+﻿using System.Collections.ObjectModel;
+
+namespace ttrssclientgui.dto
 {
     public class Feed
     {
@@ -10,5 +12,6 @@
         public string cat_id { get; set; }
         public string last_updated { get; set; }
         public string order_id { get; set; }
+        public ObservableCollection<HeadLine> headline;
     }
 }

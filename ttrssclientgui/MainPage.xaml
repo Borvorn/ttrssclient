@@ -43,7 +43,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock Text="All feeds" x:Name="PaneHeader" Grid.Row="0" Margin="60,12,0,0" FontSize="30"/>
-                        <ListView x:Name="FeedsListView" Grid.Row="1">
+                        <ListView x:Name="FeedsListView" Grid.Row="1" ItemsSource="{Binding Source=FeedList}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
@@ -74,10 +74,10 @@
                             <CheckBox Grid.Column="0" x:Name="selectAll" Margin="10,0" />
                             <TextBox Grid.Column="1" x:Name="searchText" Width="Auto" Text="Todo" Margin="5,0" />
                         </Grid>
-                        <ListView Grid.Row="1" x:Name="ArticlesListView" >
+                        <ListView Grid.Row="1" x:Name="ArticlesListView" ItemsSource="{Binding Source=HeadList}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="Todo" />
+                                    <TextBlock Text="{Binding title}" />
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
