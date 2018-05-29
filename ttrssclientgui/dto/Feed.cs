@@ -1,8 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace ttrssclientgui.dto
 {
-    public class Feed
+    public class Feed : IEnumerable
     {
         public string feed_url { get; set; }
         public string title { get; set; }
@@ -12,6 +15,16 @@ namespace ttrssclientgui.dto
         public string cat_id { get; set; }
         public string last_updated { get; set; }
         public string order_id { get; set; }
-        public ObservableCollection<HeadLine> headline;
+        public ObservableCollection<HeadLine> headline { get; set; }
+
+        public Feed()
+        {
+            //headline = new ObservableCollection<HeadLine>();
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
