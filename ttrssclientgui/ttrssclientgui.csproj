@@ -95,8 +95,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BindableBase.cs" />
-    <Compile Include="DelegateCommand.cs" />
     <Compile Include="dto\Category.cs" />
     <Compile Include="dto\Counter.cs" />
     <Compile Include="dto\Feed.cs" />

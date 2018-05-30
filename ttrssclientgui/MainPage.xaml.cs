@@ -31,36 +31,9 @@ namespace ttrssclientgui
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public partial class MainPage : Page, INotifyPropertyChanged
+    public sealed partial class MainPage : Page
     {
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
-        {
-            if (object.Equals(storage, value))
-                return false;
-
-            storage = value;
-            this.OnPropertyChanged(propertyName);
-
-            return true;
-        }
-
-        protected bool SetProperty([CallerMemberName]string propertyName = null)
-        {
-            this.OnPropertyChanged(propertyName);
-
-            return true;
-        }
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var propertyChanged = PropertyChanged;
-            if (propertyChanged != null)
-                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        Uri server = new Uri("http://example/tt-rss/api/");
+        Uri server = new Uri("http://example.com/tt-rss/api/");
 
         private string username = "user";
         private string password = "password";
@@ -72,47 +45,14 @@ namespace ttrssclientgui
         // private ObservableCollection<Feed> feedList = new ObservableCollection<Feed>();
         public ObservableCollection<Feed> FeedList;
         public ObservableCollection<Feed> FeedList2;
-        /*
-        {
-            get
-            {
-                return this.feedList;
-            }
-            set
-            {
-                SetProperty<ObservableCollection<Feed>>(ref feedList, value);
-            }
-        }
-        */
+
         // private Feed selectedFeed = new Feed();
         public Feed SelectedFeed;
-        /*
-        {
-            get
-            {
-                return this.selectedFeed;
-            }
-            set
-            {
-                SetProperty<Feed>(ref selectedFeed, value);
-            }
-        }
-        */
+
         // private ObservableCollection<HeadLine> headList = new ObservableCollection<HeadLine>();
         public ObservableCollection<HeadLine> HeadList;
         public ObservableCollection<ObservableCollection<HeadLine>> ListHeadList;
-        /*
-        {
-            get
-            {
-                return this.headList;
-            }
-            set
-            {
-                SetProperty<ObservableCollection<HeadLine>>(ref headList, value);
-            }
-        }
-        */
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -130,12 +70,12 @@ namespace ttrssclientgui
             this.FeedsListView.ItemsSource = FeedList;
         }
 
-        
+
         private async void mainWorkAsync()
         {
             Response<LoginResponse> loginResponse = new Response<LoginResponse>();
             loginResponse.content = new LoginResponse();
-            
+
             try
             {
                 JsonObject loginContent2 = await ExecuteMethod2("{\"op\":\"login\",\"user\":\"" + username + "\",\"password\":\"" + password + "\"}");
@@ -152,25 +92,25 @@ namespace ttrssclientgui
                     loginResponse.content.session_id = (string)loginContent2.GetNamedString("session_id");
 
                     string session_id = loginResponse.content.session_id;
-                    
-                    MessageDialog checkLogin = new MessageDialog(loginContent2.ToString());
-                    await checkLogin.ShowAsync();
-                    
+
+                    // MessageDialog checkLogin = new MessageDialog(loginContent2.ToString());
+                    // await checkLogin.ShowAsync();
+
                     JsonArray feedListJson = await ExecuteMethod("{\"op\":\"getFeeds\",\"sid\":\"" + session_id + "\",\"cat_id\":\"" + "-3" + "\",\"unread_only\":\"" + "true" + "\",\"include_nested\":\"" + "true" + "\"}");
-                    
+
                     for (int i = 0; i < feedListJson.Count; i++)
                     // foreach (JsonValue feedJson in feedListJson)
                     {
                         JsonObject feedJson2 = JsonObject.Parse(feedListJson[i].ToString());
 
-                        
-                        MessageDialog checkFeedJson = new MessageDialog(feedJson2.ToString());
-                        await checkFeedJson.ShowAsync();
-                        
+
+                        // MessageDialog checkFeedJson = new MessageDialog(feedJson2.ToString());
+                        // await checkFeedJson.ShowAsync();
+
 
                         Feed tempFeed = new Feed();
                         tempFeed.headline = new ObservableCollection<HeadLine>();
-                        
+
                         tempFeed.feed_url = feedJson2.GetNamedString("feed_url");
                         tempFeed.title = feedJson2.GetNamedString("title");
                         tempFeed.id = ((int)feedJson2.GetNamedNumber("id")).ToString();
@@ -179,9 +119,9 @@ namespace ttrssclientgui
                         tempFeed.cat_id = ((int)feedJson2.GetNamedNumber("cat_id")).ToString();
                         tempFeed.last_updated = ((int)feedJson2.GetNamedNumber("last_updated")).ToString();
                         tempFeed.order_id = ((int)feedJson2.GetNamedNumber("order_id")).ToString();
-                        
+
                         JsonArray headListJson = await ExecuteMethod("{\"op\":\"getHeadlines\",\"sid\":\"" + session_id + "\",\"feed_id\":\"" + tempFeed.id + "\",\"view_mode\":\"" + "unread\"}");
-                        
+
                         // for (int j = 0; j < headListJson.Count; j++)
                         foreach (JsonValue headJson in headListJson)
                         {
@@ -205,7 +145,7 @@ namespace ttrssclientgui
                             tempFeed.headline[j].feed_id = headJson2.GetNamedString("feed_id");
                             tempFeed.headline[j].feed_title = headJson2.GetNamedString("feed_title");
                             */
-                            
+
                             tempHead.id = (int)headJson2.GetNamedNumber("id");
                             tempHead.unread = headJson2.GetNamedBoolean("unread");
                             tempHead.marked = headJson2.GetNamedBoolean("marked");
@@ -216,7 +156,7 @@ namespace ttrssclientgui
                             tempHead.link = headJson2.GetNamedString("link");
                             tempHead.feed_id = headJson2.GetNamedString("feed_id");
                             tempHead.feed_title = headJson2.GetNamedString("feed_title");
-                            
+
                             // JsonArray tempArrayTags = headJson2.GetNamedArray("tags");
                             /*
                             for (uint i = 0; i < tempArrayTags.Count; i++)
@@ -231,8 +171,8 @@ namespace ttrssclientgui
                         }
                         FeedList.Add(tempFeed);
                         FeedList[i].headline = new ObservableCollection<HeadLine>();
-                        MessageDialog checkCount = new MessageDialog(HeadList.Count.ToString());
-                        await checkCount.ShowAsync();
+                        // MessageDialog checkCount = new MessageDialog(HeadList.Count.ToString());
+                        // await checkCount.ShowAsync();
                         /*
                         for (int l = 0; l < HeadList.Count; l++)
                         {
@@ -251,35 +191,35 @@ namespace ttrssclientgui
                         }
                         HeadList.Clear();
                     }
-                    
-                    MessageDialog checkGetFeeds = new MessageDialog(feedListJson.ToString());
-                    await checkGetFeeds.ShowAsync();
-                    
-                    
+
+                    // MessageDialog checkGetFeeds = new MessageDialog(feedListJson.ToString());
+                    // await checkGetFeeds.ShowAsync();
+
+
                     JsonObject logoutContent = await ExecuteMethod2("{\"op\":\"logout\",\"sid\":\"" + session_id + "\"}");
-                    
-                    MessageDialog checkLogout = new MessageDialog("logout" + logoutContent.ToString());
-                    await checkLogout.ShowAsync();
+
+                    // MessageDialog checkLogout = new MessageDialog("logout" + logoutContent.ToString());
+                    // await checkLogout.ShowAsync();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageDialog GeneralError = new MessageDialog(ex.ToString());
                 await GeneralError.ShowAsync();
             }
-            
+
         }
 
         private async Task<JsonArray> ExecuteMethod(string url)
         {
             HttpStringContent httpLogin = new HttpStringContent(url);
-                        
+
             string jsonString = "booo";
             HttpResponseMessage response = new HttpResponseMessage();
 
             JsonObject tempJsonArray = new JsonObject();
             // JsonObject tempJsonArray2 = new JsonObject();
-            
+
             response = await client.PostAsync(server, httpLogin);
             jsonString = await response.Content.ReadAsStringAsync();
             return JsonObject.Parse(jsonString).GetNamedArray("content");
@@ -310,7 +250,7 @@ namespace ttrssclientgui
                 return JsonObject.Parse(jsonString).GetNamedObject("content");
             }
         }
-        
+
         private void ToggleButton_Click(object sender, RoutedEventArgs e)
         {
             if (splitView.IsPaneOpen)
@@ -323,46 +263,20 @@ namespace ttrssclientgui
             }
         }
 
-        private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
-        {
-            // selectFeedItem();
-
-        }
 
         private void FeedsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            selectFeedItem();
-        }
-
-        private void FeedsListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // selectFeedItem();
-        }
-
-        private async void selectFeedItem()
-        {
             BindingExpression articleBinding = ArticlesListView.GetBindingExpression(ListView.ItemsSourceProperty);
             int tempIndex = FeedsListView.SelectedIndex;
-            // MessageDialog checkFeed = new MessageDialog(tempIndex.ToString());
-            // await checkFeed.ShowAsync();
-            // SelectedFeed = ListHeadList;
-            // SelectedFeed.headline = FeedList.ElementAt(tempIndex).headline;
-            
+
             SelectedFeed.headline.Clear();
 
-            // articleBinding.UpdateSource();
-            MessageDialog checkCount = new MessageDialog(ListHeadList[tempIndex].Count.ToString());
-            await checkCount.ShowAsync();
-            for (int i=0; i < ListHeadList[tempIndex].Count; i++)
+            for (int i = 0; i < ListHeadList[tempIndex].Count; i++)
             {
-                // MessageDialog checkFeed = new MessageDialog((ListHeadList[tempIndex])[i].title.ToString());
-                // await checkFeed.ShowAsync();
                 SelectedFeed.headline.Add((ListHeadList[tempIndex])[i]);
             }
-            
-            // ArticlesListView.ItemsSource = SelectedFeed.headline;
-            articleBinding.UpdateSource();
         }
+
         /*
         static LoginRequest GetLoginRequest(string userName, string password)
         {
